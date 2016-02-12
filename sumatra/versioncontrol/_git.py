@@ -46,6 +46,14 @@ def check_version():
             "Your Git Python binding is too old. You require at least "
             "version {0}. You can install the latest version e.g. via "
             "'pip install -U gitpython'".format(minimum_version))
+    #check bin executable version
+    try:
+        git.cmd.Git().version_info
+    except:
+        #on windows git is not always on path https://github.com/gitpython-developers/GitPython/issues/26
+        raise VersionControlError(
+            "Git executable not found. Try to set PATH or GIT_PYTHON_GIT_EXECUTABLE"
+        )
 
 
 def findrepo(path):
