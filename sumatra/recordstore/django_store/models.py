@@ -191,8 +191,20 @@ class Datastore(BaseModel):
     def access_parameters(self):
         return eval(self.parameters)
 
+class MedicalDataKey(models.Model):
+    datakey = models.ForeignKey('DataKey', primary_key=True)
+    dirname = models.CharField(max_length=200)
+    basename = models.CharField(max_length=200)
+    object = models.ForeignKey('MedicalObject', related_name='id',
+                                           null=True )
 
-class DataKey(BaseModel):
+class MedicalObject(models.Model):
+    dirname = models.CharField(max_length=200, primary_key=True) #i don't know why it need a primary key??
+    nfiles = models.IntegerField(null=True)
+    smirUrl = models.CharField(max_length=200, null=True)
+
+
+class DataKey(models.Model):
     path = models.CharField(max_length=200)
     digest = models.CharField(max_length=40)
     creation = models.DateTimeField(null=True, blank=True)
