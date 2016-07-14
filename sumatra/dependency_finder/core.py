@@ -34,13 +34,12 @@ def find_versions_from_versioncontrol(dependencies):
         if dependency.version == "unknown":
             try:
                 wc = versioncontrol.get_working_copy(dependency.path)
-            except versioncontrol.VersionControlError:
-                pass  # dependency.version remains "unknown"
-            else:
                 if wc.has_changed():
                     dependency.diff = wc.diff()
                 dependency.version = wc.current_version()
                 dependency.source = wc.repository.url
+            except versioncontrol.VersionControlError:
+                dependency.version == "unknown"
     return dependencies
 
 
