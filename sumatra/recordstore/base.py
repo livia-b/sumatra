@@ -91,8 +91,8 @@ class RecordStore(object):
         """
         # what to do about syncing different Sumatra versions? Need to think about
         # schema versioning
-        self_labels = set(self.labels(project_name))
-        other_labels = set(other.labels(project_name))
+        self_labels = set(self.labels(project_name));print ("self has %d records" %len(self_labels))
+        other_labels = set(other.labels(project_name));print ("other  has %d records" %len(other_labels))
         only_in_self = self_labels.difference(other_labels)
         only_in_other = other_labels.difference(self_labels)
         in_both = self_labels.intersection(other_labels)
@@ -101,9 +101,9 @@ class RecordStore(object):
             if self.get(project_name, label) != other.get(project_name, label):
                 non_synchronizable.append(label)
         for label in only_in_self:
-            other.save(project_name, self.get(project_name, label))
+            other.save(project_name, self.get(project_name, label));print("saving", label);
         for label in only_in_other:
-            self.save(project_name, other.get(project_name, label))
+            self.save(project_name, other.get(project_name, label));print("saving", label);
         return non_synchronizable
 
     def sync_all(self, other):

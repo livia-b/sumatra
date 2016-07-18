@@ -32,7 +32,7 @@ class SumatraObjectsManager(models.Manager):
         # want to store in a single table in the database.
         # might be better to specify the list of field names explicitly
         # as an argument to the Manager __init__().
-        excluded_fields = ('id', 'record', 'input_to_records', 'output_from_record', 'output_from_record_id')
+        excluded_fields = ('id', 'record', 'input_to_records', 'output_from_record', 'output_from_record_id','basename','basedir')
         field_names = set(self.model._meta.get_all_field_names()).difference(excluded_fields)
         attributes = {}
         for name in field_names:
@@ -194,12 +194,20 @@ class Datastore(BaseModel):
 
 class DataKey(BaseModel):
     path = models.CharField(max_length=200)
+    dirname = models.CharField(max_length=200)
+    basename = models.CharField(max_length=200)
     digest = models.CharField(max_length=40)
     creation = models.DateTimeField(null=True, blank=True)
     metadata = models.TextField(blank=True)
     output_from_record = models.ForeignKey('Record', related_name='output_data',
                                            null=True)
-
+    def __init__(self,*args, **kwargs):
+	    import os
+	    if 'path' in kwargs:
+		  path = kwargs['path']
+		  kwargs['dirname'] = os.path.dirname(path)
+		  kwargs['basename'] = os.path.basename(path)
+	    super(DataKey,self).__init__(*args,**kwargs)
     class Meta(object):
         ordering = ('path',)
 

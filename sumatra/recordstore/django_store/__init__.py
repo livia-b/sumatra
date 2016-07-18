@@ -128,8 +128,8 @@ class DjangoConfiguration(object):
             if not self.configured:
                 if hasattr(django, "setup"):
                     django.setup()
-                self._create_databases()
-            self.configured = True
+        self._create_databases()
+        self.configured = True
 
 db_config = DjangoConfiguration()
 
